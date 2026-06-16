@@ -89,8 +89,8 @@
 </div>
 </form>
 
-
-@if($searchComparison)
+{{-- Alert Statistik algoritma search dan sort --}}
+{{-- @if($searchComparison)
 
 <div class="alert alert-info">
 
@@ -113,7 +113,7 @@
 
 </div>
 
-@endif
+@endif --}}
 
 <table class="table table-bordered table-striped">
 
@@ -224,5 +224,94 @@
     </tbody>
 
 </table>
+
+<div class="card mb-3">
+
+    <div class="card-header">
+
+        Ringkasan Hasil Algoritma
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-4">
+
+                <strong>Total Data:</strong>
+
+                {{ $totalData }}
+
+            </div>
+
+            <div class="col-md-4">
+
+                <strong>Data Ditampilkan:</strong>
+
+                {{ $totalResult }}
+
+            </div>
+
+            <div class="col-md-4">
+
+                <strong>Waktu Eksekusi:</strong>
+
+                {{ number_format(
+                    $executionTime,
+                    6
+                ) }}
+
+                detik
+
+            </div>
+
+        </div>
+
+        <hr>
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <h6>
+                    Sequential Search
+                </h6>
+
+                Pemeriksaan:
+
+                <strong>
+
+                    {{ $searchComparison }}
+
+                </strong>
+
+                kali
+
+            </div>
+
+            <div class="col-md-6">
+
+                <h6>
+                    Selection Sort
+                </h6>
+
+                Perbandingan:
+
+                <strong>
+
+                    {{ $sortComparison }}
+
+                </strong>
+
+                kali
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>  
 
 @endsection

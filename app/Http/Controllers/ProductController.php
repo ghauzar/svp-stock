@@ -23,21 +23,10 @@ class ProductController extends Controller
         SelectionSortService $sortService
     )
     {
-        // $products = Product::with('category')
-        //     ->get()
-        //     ->map(function ($item) {
-        //         return [
-        //             'id' => $item->id,
-        //             'kode_barang' => $item->kode_barang,
-        //             'nama_barang' => $item->nama_barang,
-        //             'kategori' => $item->category->nama_kategori,
-        //             'harga' => $item->harga,
-        //             'stok_total' => $item->stok_total,
-        //             'stok_minimum' => $item->stok_minimum,
-        //             'tanggal_masuk' => $item->created_at->format('Y-m-d'),
-        //         ];
-        //     })
-        //     ->toArray();
+        // Deklarasi variabel yang dibutuhkan
+        $searchComparison = 0;
+        $sortComparison = 0;
+        $executionTime = 0;
 
         $products = Product::with('category')
             ->get()
@@ -56,7 +45,9 @@ class ProductController extends Controller
             })
             ->toArray();
 
-        $searchComparison = 0;
+        // Pengukur waktu (Start)
+        $startTime = microtime(true);
+
         if(
             $request->filled('search')
             &&
@@ -75,7 +66,7 @@ class ProductController extends Controller
                 $result['comparison'];
         }
 
-        $sortComparison = 0;
+        
         if($request->filled('sort'))
         {
             $result = $sortService->sort(
@@ -89,12 +80,20 @@ class ProductController extends Controller
                 $result['comparison'];
         }
 
+        // Pengukur waktu (end)
+        $executionTime = microtime(true) - $startTime;
+        $totalData=count($products);
+        $totalResult = count($products);
+
         return view(
             'products.index',
             compact(
                 'products',
                 'searchComparison',
-                'sortComparison'
+                'sortComparison',
+                'executionTime',
+                'totalData',
+                'totalResult'
             )
         );
     }
