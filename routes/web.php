@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,20 +23,14 @@ Route::post('/logout', [AuthController::class,'logout']);
 Route::middleware('check.login')
 ->group(function(){
 
-    Route::get('/dashboard', function () {
-
-        return view('dashboard');
-
-    });
+    Route::get(
+        '/dashboard',
+        [DashboardController::class, 'index']
+    )->name('dashboard');
 
     Route::resource(
         'categories',
         CategoryController::class
-    );
-
-    Route::resource(
-        'products',
-        ProductController::class
     );
 
     Route::resource(
@@ -70,4 +65,25 @@ Route::middleware('check.login')
         TransactionController::class
     );
 
+
+    Route::get(
+        '/products/import',
+        [ProductController::class, 'showImportForm']
+    )->name('products.import.form');
+
+    Route::post(
+        '/products/import',
+        [ProductController::class, 'import']
+    )->name('products.import');
+    
+    Route::get(
+        '/products/template',
+        [ProductController::class, 'downloadTemplate']
+    )->name('products.template');
+
+
+    Route::resource(
+        'products',
+        ProductController::class
+    );
 });

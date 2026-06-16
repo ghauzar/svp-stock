@@ -5,13 +5,23 @@
 <div class="d-flex justify-content-between mb-3">
 
     <h3>Data Barang</h3>
+    
 
+<div>
     <a href="{{ route('products.create') }}"
        class="btn btn-primary">
 
         Tambah Barang
 
     </a>
+
+    <a href="{{ route('products.import.form') }}"
+        class="btn btn-success">
+
+            Import Excel
+
+    </a>
+</div>
 
 </div>
 

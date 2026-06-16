@@ -11,6 +11,8 @@ use App\Models\Product;
 use App\Services\SequentialSearchService;
 use App\Services\SelectionSortService;
 
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
 class ProductController extends Controller
 {
     /**
@@ -110,6 +112,69 @@ class ProductController extends Controller
             compact('categories')
         );
     }
+
+    // Method untuk import data dengan Excel
+    public function showImportForm()
+    {
+        return view('products.import');
+    }
+
+    public function downloadTemplate()
+    {
+        return response()->download(
+            public_path('template-product.xlsx')
+        );
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls'
+        ]);
+
+        $spreadsheet = IOFactory::load(
+            $request->file('file')->getPathname()
+        );
+
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $rows = $sheet->toArray();
+
+        foreach(array_slice($rows, 1) as $row)
+        {
+            $category = Category::firstOrCreate([
+                'nama_kategori' => $row[2]
+            ]);
+
+            Product::updateOrCreate(
+
+                [
+                    'kode_barang' => $row[0]
+                ],
+
+                [
+                    'nama_barang' => $row[1],
+
+                    'category_id' => $category->id,
+
+                    'harga' => $row[3],
+
+                    'stok_total' => $row[4],
+
+                    'stok_minimum' => $row[5]
+                ]
+            );
+        }
+
+        return redirect()
+            ->route('products.index')
+            ->with(
+                'success',
+                'Import berhasil'
+            );
+    }
+
+
 
     /**
      * Store a newly created resource in storage.
