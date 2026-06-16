@@ -164,22 +164,150 @@ class TransactionController extends Controller
      */
     public function edit(Transaction $transaction)
     {
-        //
+        $products = Product::all();
+
+        return view(
+            'transactions.edit',
+            compact(
+                'transaction',
+                'products'
+            )
+        );
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Transaction $transaction)
+    public function update(
+        Request $request,
+        Transaction $transaction
+    )
     {
-        //
+        $product = Product::find(
+            $transaction->product_id
+        );
+
+        // rollback transaksi lama
+
+        if(
+            $transaction->jenis_transaksi
+            == 'masuk'
+        )
+        {
+            $product->decrement(
+                'stok_total',
+                $transaction->jumlah
+            );
+        }
+        else
+        {
+            $product->increment(
+                'stok_total',
+                $transaction->jumlah
+            );
+        }
+
+        // terapkan transaksi baru
+
+        if(
+            $request->jenis_transaksi
+            == 'masuk'
+        )
+        {
+            $product->increment(
+                'stok_total',
+                $request->jumlah
+            );
+        }
+        else
+        {
+            if(
+                $product->stok_total
+                <
+                $request->jumlah
+            )
+            {
+                return back()
+                    ->with(
+                        'error',
+                        'Stok tidak mencukupi'
+                    );
+            }
+
+            $product->decrement(
+                'stok_total',
+                $request->jumlah
+            );
+        }
+
+        $transaction->update([
+
+            'product_id'
+                =>
+            $request->product_id,
+
+            'jenis_transaksi'
+                =>
+            $request->jenis_transaksi,
+
+            'jumlah'
+                =>
+            $request->jumlah,
+
+            'tanggal'
+                =>
+            $request->tanggal,
+
+            'keterangan'
+                =>
+            $request->keterangan
+
+        ]);
+
+        return redirect()
+            ->route('transactions.index')
+            ->with(
+                'success',
+                'Transaksi berhasil diubah'
+            );
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Transaction $transaction)
+    public function destroy(
+        Transaction $transaction
+    )
     {
-        //
+        $product = Product::find(
+            $transaction->product_id
+        );
+
+        if(
+            $transaction->jenis_transaksi
+            == 'masuk'
+        )
+        {
+            $product->decrement(
+                'stok_total',
+                $transaction->jumlah
+            );
+        }
+        else
+        {
+            $product->increment(
+                'stok_total',
+                $transaction->jumlah
+            );
+        }
+
+        $transaction->delete();
+
+        return redirect()
+            ->route('transactions.index')
+            ->with(
+                'success',
+                'Transaksi berhasil dihapus'
+            );
     }
 }

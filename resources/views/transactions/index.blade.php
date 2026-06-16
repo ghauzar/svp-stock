@@ -58,6 +58,7 @@
             <th>Jumlah</th>
             <th>Tanggal</th>
             <th>Admin</th>
+            <th colspan="2">Aksi</th>
 
         </tr>
 
@@ -109,6 +110,43 @@
 
             <td>
                 {{ $trx['admin'] }}
+            </td>
+
+            <td>
+
+                <a href="{{ route(
+                    'transactions.edit',
+                    $trx['id']
+                ) }}"
+                class="btn btn-warning btn-sm">
+
+                    Edit
+
+                </a>
+
+                <form
+                    action="{{ route(
+                        'transactions.destroy',
+                        $trx['id']
+                    ) }}"
+                    method="POST"
+                    class="d-inline">
+
+                    @csrf
+                    @method('DELETE')
+
+                    <button
+                        class="btn btn-danger btn-sm"
+                        onclick="return confirm(
+                            'Hapus transaksi?'
+                        )">
+
+                        Hapus
+
+                    </button>
+
+                </form>
+
             </td>
 
         </tr>
