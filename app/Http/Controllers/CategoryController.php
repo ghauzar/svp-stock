@@ -64,24 +64,44 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Category $category)
     {
-        //
+        return view(
+            'categories.edit',
+            compact('category')
+        );
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(
+        Request $request,
+        Category $category
+    )
     {
-        //
+        $request->validate([
+            'nama_kategori' => 'required'
+        ]);
+
+        $category->update([
+            'nama_kategori' => $request->nama_kategori
+        ]);
+
+        return redirect()
+            ->route('categories.index')
+            ->with('success', 'Kategori berhasil diubah');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Category $category)
     {
-        //
+        $category->delete();
+
+        return redirect()
+            ->route('categories.index')
+            ->with('success', 'Kategori berhasil dihapus');
     }
 }

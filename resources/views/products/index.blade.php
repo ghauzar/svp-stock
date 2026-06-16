@@ -23,26 +23,60 @@
             type="text"
             name="search"
             class="form-control"
-            placeholder="Cari Nama Barang"
+            placeholder="Cari "
             value="{{ request('search') }}">
+    </div>
+    <div class="col-md-3">
+
+    <select
+        name="search_by"
+        class="form-control">
+
+        <option value="nama_barang">
+            Nama Barang
+        </option>
+
+        <option value="kode_barang">
+            Kode Barang
+        </option>
+
+        <option value="kategori">
+            Kategori
+        </option>
+
+        <option value="stok_total">
+            Jumlah Stok
+        </option>
+
+    </select>
+
     </div>
 
     <div class="col-md-3">
         <select
             name="sort"
             class="form-control">
+
             <option value="">
-                Urutkan
+                Pilih Pengurutan
             </option>
-            <option value="nama_barang">
-                Nama Barang
-            </option>
-            <option value="harga">
-                Harga
-            </option>
+
             <option value="stok_total">
                 Stok
             </option>
+
+            <option value="kategori">
+                Kategori
+            </option>
+
+            <option value="harga">
+                Harga
+            </option>
+
+            <option value="tanggal_masuk">
+                Tanggal Masuk
+            </option>
+
         </select>
     </div>
 
@@ -56,6 +90,31 @@
 </form>
 
 
+@if($searchComparison)
+
+<div class="alert alert-info">
+
+    Sequential Search melakukan
+    {{ $searchComparison }}
+    kali pemeriksaan data
+
+</div>
+
+@endif
+
+
+@if($sortComparison)
+
+<div class="alert alert-warning">
+
+    Selection Sort melakukan
+    {{ $sortComparison }}
+    kali perbandingan data
+
+</div>
+
+@endif
+
 <table class="table table-bordered table-striped">
 
     <thead>
@@ -66,6 +125,7 @@
             <th>Nama Barang</th>
             <th>Kategori</th>
             <th>Harga</th>
+            <th>Tanggal Masuk</th>
             <th>Stok</th>
             <th width="180">Aksi</th>
 
@@ -93,6 +153,10 @@
 
             <td>
                 Rp {{ number_format($product['harga']) }}
+            </td>
+
+            <td>
+                {{ $product['tanggal_masuk'] }}
             </td>
 
             <td>

@@ -16,12 +16,29 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
+    
     public function index(
         Request $request,
         SequentialSearchService $searchService,
         SelectionSortService $sortService
     )
     {
+        // $products = Product::with('category')
+        //     ->get()
+        //     ->map(function ($item) {
+        //         return [
+        //             'id' => $item->id,
+        //             'kode_barang' => $item->kode_barang,
+        //             'nama_barang' => $item->nama_barang,
+        //             'kategori' => $item->category->nama_kategori,
+        //             'harga' => $item->harga,
+        //             'stok_total' => $item->stok_total,
+        //             'stok_minimum' => $item->stok_minimum,
+        //             'tanggal_masuk' => $item->created_at->format('Y-m-d'),
+        //         ];
+        //     })
+        //     ->toArray();
+
         $products = Product::with('category')
             ->get()
             ->map(function ($item) {
@@ -33,30 +50,52 @@ class ProductController extends Controller
                     'harga' => $item->harga,
                     'stok_total' => $item->stok_total,
                     'stok_minimum' => $item->stok_minimum,
-                    'tanggal_masuk' => $item->created_at->format('Y-m-d'),
+                    'tanggal_masuk' => $item->created_at->format('d-m-Y')
+
                 ];
             })
             ->toArray();
 
-        if ($request->filled('search'))
+        $searchComparison = 0;
+        if(
+            $request->filled('search')
+            &&
+            $request->filled('search_by')
+        )
         {
-            $products = $searchService->search(
+            $result = $searchService->search(
                 $products,
-                $request->search
+                $request->search,
+                $request->search_by
             );
+
+            $products = $result['data'];
+
+            $searchComparison =
+                $result['comparison'];
         }
 
-        if ($request->filled('sort'))
+        $sortComparison = 0;
+        if($request->filled('sort'))
         {
-            $products = $sortService->sort(
+            $result = $sortService->sort(
                 $products,
                 $request->sort
             );
+
+            $products = $result['data'];
+
+            $sortComparison =
+                $result['comparison'];
         }
 
         return view(
             'products.index',
-            compact('products')
+            compact(
+                'products',
+                'searchComparison',
+                'sortComparison'
+            )
         );
     }
 
@@ -106,24 +145,64 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Product $product)
     {
-        //
+        $categories = Category::all();
+
+        return view(
+            'products.edit',
+            compact(
+                'product',
+                'categories'
+            )
+        );
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(
+        Request $request,
+        Product $product
+    )
     {
-        //
+        $request->validate([
+            'kode_barang' => 'required',
+            'nama_barang' => 'required',
+            'category_id' => 'required',
+            'harga' => 'required'
+
+        ]);
+
+        $product->update([
+            'kode_barang' => $request->kode_barang,
+            'nama_barang' => $request->nama_barang,
+            'category_id' => $request->category_id,
+            'harga' => $request->harga,
+            'stok_total' => $request->stok_total,
+            'stok_minimum' => $request->stok_minimum
+        ]);
+
+        return redirect()
+            ->route('products.index')
+            ->with(
+                'success',
+                'Barang berhasil diubah'
+            );
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Product $product)
     {
-        //
+        $product->delete();
+
+        return redirect()
+            ->route('products.index')
+            ->with(
+                'success',
+                'Barang berhasil dihapus'
+            );
     }
 }

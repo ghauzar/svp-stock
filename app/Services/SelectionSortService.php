@@ -4,35 +4,46 @@ namespace App\Services;
 
 class SelectionSortService
 {
-    public function sort(array $data, string $field)
+    public function sort(
+        array $data,
+        string $field
+    )
     {
+        $comparison = 0;
+
         $n = count($data);
 
-        for ($i = 0; $i < $n - 1; $i++)
+        for($i = 0; $i < $n - 1; $i++)
         {
-            $minIndex = $i;
+            $min = $i;
 
-            for ($j = $i + 1; $j < $n; $j++)
+            for($j = $i + 1; $j < $n; $j++)
             {
-                if (
+                $comparison++;
+
+                if(
                     $data[$j][$field]
                     <
-                    $data[$minIndex][$field]
-                ) {
-                    $minIndex = $j;
+                    $data[$min][$field]
+                )
+                {
+                    $min = $j;
                 }
             }
 
-            if ($minIndex != $i)
+            if($min != $i)
             {
                 $temp = $data[$i];
 
-                $data[$i] = $data[$minIndex];
+                $data[$i] = $data[$min];
 
-                $data[$minIndex] = $temp;
+                $data[$min] = $temp;
             }
         }
 
-        return $data;
+        return [
+            'data' => $data,
+            'comparison' => $comparison
+        ];
     }
 }
