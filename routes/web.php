@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\TransactionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -40,6 +41,33 @@ Route::middleware('check.login')
     Route::resource(
         'stocks',
         StockController::class
+    );
+
+    
+    // Route untuk transaksi
+    Route::get(
+        '/transactions/barang-masuk',
+        [TransactionController::class,'createMasuk']
+    )->name('transactions.masuk');
+
+    Route::post(
+        '/transactions/barang-masuk',
+        [TransactionController::class,'storeMasuk']
+    )->name('transactions.storeMasuk');
+
+    Route::get(
+        '/transactions/barang-keluar',
+        [TransactionController::class,'createKeluar']
+    )->name('transactions.keluar');
+
+    Route::post(
+        '/transactions/barang-keluar',
+        [TransactionController::class,'storeKeluar']
+    )->name('transactions.storeKeluar');
+
+    Route::resource(
+        'transactions',
+        TransactionController::class
     );
 
 });

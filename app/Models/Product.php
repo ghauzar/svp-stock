@@ -26,4 +26,11 @@ class Product extends Model
             Stock::class
         );
     }
+
+    public function transactions()
+    {
+        return $this->hasMany(
+            Transaction::class
+        );
+    }
 }
