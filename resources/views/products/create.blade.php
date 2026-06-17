@@ -2,97 +2,310 @@
 
 @section('content')
 
-<h3>Tambah Barang</h3>
+<style>
 
-<form action="{{ route('products.store') }}"
-      method="POST">
+.page-title{
+    color:#fff;
+    font-size:40px;
+    font-weight:700;
+}
 
-    @csrf
+.page-subtitle{
+    color:#94a3b8;
+}
 
-    <div class="mb-3">
+.glass-card{
+    background:rgba(255,255,255,.05);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:24px;
+    box-shadow:0 8px 32px rgba(0,0,0,.35);
+}
 
-        <label>Kode Barang</label>
+.form-label{
+    color:#d4af37;
+    font-weight:600;
+    margin-bottom:10px;
+}
 
-        <input
-            type="text"
-            name="kode_barang"
-            class="form-control">
+.custom-input{
+    background:rgba(255,255,255,.05)!important;
+    border:1px solid rgba(255,255,255,.08)!important;
+    color:#fff!important;
+    min-height:50px;
+}
+
+.custom-input:focus{
+    background:rgba(255,255,255,.08)!important;
+    border-color:#d4af37!important;
+    box-shadow:none!important;
+    color:#fff!important;
+}
+
+.custom-input::placeholder{
+    color:#94a3b8;
+}
+
+.custom-input option{
+    background:#0f172a;
+    color:#fff;
+}
+
+.btn-gold{
+    background:#d4af37;
+    border:none;
+    color:#111827;
+    font-weight:600;
+    padding:12px 24px;
+}
+
+.btn-gold:hover{
+    background:#c29d24;
+    color:white;
+}
+
+.btn-dark-custom{
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.08);
+    color:white;
+    padding:12px 24px;
+}
+
+.btn-dark-custom:hover{
+    background:rgba(255,255,255,.08);
+    color:white;
+}
+
+.input-icon{
+    position:relative;
+}
+
+.input-icon i{
+    position:absolute;
+    top:50%;
+    left:15px;
+    transform:translateY(-50%);
+    color:#d4af37;
+}
+
+.input-icon input{
+    padding-left:45px;
+}
+
+@media(max-width:768px){
+
+    .page-title{
+        font-size:30px;
+    }
+
+}
+
+</style>
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+
+        <h1 class="page-title">
+
+            Tambah Barang
+
+        </h1>
+
+        <p class="page-subtitle">
+
+            Tambahkan data barang baru ke dalam inventaris
+
+        </p>
 
     </div>
 
-    <div class="mb-3">
+    <div class="glass-card p-4 p-lg-5">
 
-        <label>Nama Barang</label>
+        <form
+            action="{{ route('products.store') }}"
+            method="POST">
 
-        <input
-            type="text"
-            name="nama_barang"
-            class="form-control">
+            @csrf
+
+            <div class="row">
+
+                <div class="col-md-6 mb-4">
+
+                    <label class="form-label">
+
+                        Kode Barang
+
+                    </label>
+
+                    <div class="input-icon">
+
+                        <i class="bi bi-upc-scan"></i>
+
+                        <input
+                            type="text"
+                            name="kode_barang"
+                            class="form-control custom-input"
+                            placeholder="Masukkan kode barang">
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 mb-4">
+
+                    <label class="form-label">
+
+                        Nama Barang
+
+                    </label>
+
+                    <div class="input-icon">
+
+                        <i class="bi bi-box-seam"></i>
+
+                        <input
+                            type="text"
+                            name="nama_barang"
+                            class="form-control custom-input"
+                            placeholder="Masukkan nama barang">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-4">
+
+                    <label class="form-label">
+
+                        Kategori
+
+                    </label>
+
+                    <select
+                        name="category_id"
+                        class="form-select custom-input">
+
+                        @foreach($categories as $category)
+
+                            <option value="{{ $category->id }}">
+
+                                {{ $category->nama_kategori }}
+
+                            </option>
+
+                        @endforeach
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-6 mb-4">
+
+                    <label class="form-label">
+
+                        Harga
+
+                    </label>
+
+                    <div class="input-icon">
+
+                        <i class="bi bi-cash-stack"></i>
+
+                        <input
+                            type="number"
+                            name="harga"
+                            class="form-control custom-input"
+                            placeholder="Masukkan harga">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-4">
+
+                    <label class="form-label">
+
+                        Stok Awal
+
+                    </label>
+
+                    <div class="input-icon">
+
+                        <i class="bi bi-boxes"></i>
+
+                        <input
+                            type="number"
+                            name="stok_total"
+                            class="form-control custom-input"
+                            placeholder="Masukkan stok awal">
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 mb-4">
+
+                    <label class="form-label">
+
+                        Stok Minimum
+
+                    </label>
+
+                    <div class="input-icon">
+
+                        <i class="bi bi-exclamation-triangle"></i>
+
+                        <input
+                            type="number"
+                            name="stok_minimum"
+                            value="5"
+                            class="form-control custom-input">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <hr class="border-secondary my-4">
+
+            <div class="d-flex flex-column flex-md-row gap-2">
+
+                <button
+                    type="submit"
+                    class="btn btn-gold">
+
+                    <i class="bi bi-check-circle me-2"></i>
+
+                    Simpan Barang
+
+                </button>
+
+                <a
+                    href="{{ route('products.index') }}"
+                    class="btn btn-dark-custom">
+
+                    <i class="bi bi-arrow-left me-2"></i>
+
+                    Kembali
+
+                </a>
+
+            </div>
+
+        </form>
 
     </div>
 
-    <div class="mb-3">
-
-        <label>Kategori</label>
-
-        <select
-            name="category_id"
-            class="form-control">
-
-            @foreach($categories as $category)
-
-                <option value="{{ $category->id }}">
-                    {{ $category->nama_kategori }}
-                </option>
-
-            @endforeach
-
-        </select>
-
-    </div>
-
-    <div class="mb-3">
-
-        <label>Harga</label>
-
-        <input
-            type="number"
-            name="harga"
-            class="form-control">
-
-    </div>
-
-    <div class="mb-3">
-
-        <label>Stok Awal</label>
-
-        <input
-            type="number"
-            name="stok_total"
-            class="form-control">
-
-    </div>
-
-    <div class="mb-3">
-
-        <label>Stok Minimum</label>
-
-        <input
-            type="number"
-            name="stok_minimum"
-            value="5"
-            class="form-control">
-
-    </div>
-
-    <button
-        type="submit"
-        class="btn btn-success">
-
-        Simpan
-
-    </button>
-
-</form>
+</div>
 
 @endsection

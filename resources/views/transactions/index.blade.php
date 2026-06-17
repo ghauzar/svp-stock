@@ -2,21 +2,193 @@
 
 @section('content')
 
-<div class="d-flex justify-content-between mb-3">
+<style>
 
-    <h3>Riwayat Transaksi</h3>
+.page-title{
+    color:#fff;
+    font-size:40px;
+    font-weight:700;
+}
+
+.page-subtitle{
+    color:#94a3b8;
+}
+
+.glass-card{
+    background:rgba(255,255,255,.05);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:24px;
+    box-shadow:0 8px 32px rgba(0,0,0,.35);
+}
+
+.btn-gold{
+    background:#d4af37;
+    border:none;
+    color:#111827;
+    font-weight:600;
+    border-radius:12px;
+    padding:12px 20px;
+}
+
+.btn-gold:hover{
+    background:#c89f1f;
+    color:#111827;
+}
+
+.btn-red{
+    background:#dc3545;
+    border:none;
+    color:white;
+    font-weight:600;
+    border-radius:12px;
+    padding:12px 20px;
+}
+
+.btn-red:hover{
+    background:#bb2d3b;
+    color:white;
+}
+
+.stat-card{
+    background:rgba(212,175,55,.08);
+    border:1px solid rgba(212,175,55,.2);
+    border-radius:18px;
+    padding:25px;
+}
+
+.stat-number{
+    color:#d4af37;
+    font-size:42px;
+    font-weight:700;
+}
+
+.stat-label{
+    color:#94a3b8;
+}
+
+.custom-table{
+    width:100%;
+    color:white;
+    border-collapse:separate;
+    border-spacing:0;
+}
+
+.custom-table thead th{
+    background:rgba(212,175,55,.12);
+    color:#d4af37;
+    border:none;
+    padding:18px;
+    font-weight:600;
+}
+
+.custom-table tbody tr:nth-child(odd){
+    background:rgba(255,255,255,.03);
+}
+
+.custom-table tbody tr:nth-child(even){
+    background:rgba(255,255,255,.06);
+}
+
+.custom-table tbody td{
+    padding:18px;
+    border:none;
+    vertical-align:middle;
+}
+
+.badge-masuk{
+    background:rgba(25,135,84,.2);
+    color:#3ddc97;
+    padding:8px 14px;
+    border-radius:999px;
+    font-weight:600;
+}
+
+.badge-keluar{
+    background:rgba(220,53,69,.2);
+    color:#ff6b81;
+    padding:8px 14px;
+    border-radius:999px;
+    font-weight:600;
+}
+
+.btn-action{
+    width:38px;
+    height:38px;
+    border:none;
+    border-radius:10px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.btn-edit{
+    background:#ffc107;
+    color:#111827;
+}
+
+.btn-delete{
+    background:#dc3545;
+    color:white;
+}
+
+.alert{
+    border:none;
+    border-radius:14px;
+}
+
+@media(max-width:768px){
+
+    .page-title{
+        font-size:30px;
+    }
+
+    .header-mobile{
+        flex-direction:column;
+        align-items:start !important;
+        gap:15px;
+    }
+
+}
+
+</style>
+
+<div class="container-fluid">
+
+
+<div class="d-flex justify-content-between align-items-center mb-4 header-mobile">
 
     <div>
 
+        <h1 class="page-title">
+
+            Riwayat Transaksi
+
+        </h1>
+
+        <p class="page-subtitle">
+
+            Monitoring seluruh aktivitas barang masuk dan keluar
+
+        </p>
+
+    </div>
+
+    <div class="d-flex gap-2">
+
         <a href="{{ route('transactions.masuk') }}"
-           class="btn btn-success">
+           class="btn btn-gold">
+
+            <i class="bi bi-box-arrow-in-down me-2"></i>
 
             Barang Masuk
 
         </a>
 
         <a href="{{ route('transactions.keluar') }}"
-           class="btn btn-danger">
+           class="btn btn-red">
+
+            <i class="bi bi-box-arrow-up me-2"></i>
 
             Barang Keluar
 
@@ -46,128 +218,177 @@
 
 @endif
 
-<table class="table table-bordered table-striped">
+<div class="row mb-4">
 
-    <thead>
+    <div class="col-md-4">
 
-        <tr>
+        <div class="stat-card">
 
-            <th>No</th>
-            <th>Barang</th>
-            <th>Jenis</th>
-            <th>Jumlah</th>
-            <th>Tanggal</th>
-            <th>Admin</th>
-            <th colspan="2">Aksi</th>
+            <div class="stat-number">
 
-        </tr>
+                {{ count($transactions) }}
 
-    </thead>
+            </div>
 
-    <tbody>
+            <div class="stat-label">
 
-    @forelse($transactions as $index => $trx)
+                Total Transaksi
 
-        <tr>
+            </div>
 
-            <td>
-                {{ $index + 1 }}
-            </td>
+        </div>
 
-            <td>
-                {{ $trx['barang'] }}
-            </td>
+    </div>
 
-            <td>
+</div>
 
-                @if($trx['jenis'] == 'masuk')
+<div class="glass-card p-4">
 
-                    <span class="badge bg-success">
+    <div class="table-responsive">
 
-                        MASUK
+        <table class="custom-table">
 
-                    </span>
+            <thead>
 
-                @else
+                <tr>
 
-                    <span class="badge bg-danger">
+                    <th>No</th>
+                    <th>Barang</th>
+                    <th>Jenis</th>
+                    <th>Jumlah</th>
+                    <th>Tanggal</th>
+                    <th>Admin</th>
+                    <th width="120">Aksi</th>
 
-                        KELUAR
+                </tr>
 
-                    </span>
+            </thead>
 
-                @endif
+            <tbody>
 
-            </td>
+            @forelse($transactions as $index => $trx)
 
-            <td>
-                {{ $trx['jumlah'] }}
-            </td>
+                <tr>
 
-            <td>
-                {{ $trx['tanggal'] }}
-            </td>
+                    <td>
 
-            <td>
-                {{ $trx['admin'] }}
-            </td>
+                        <span class="badge bg-secondary">
 
-            <td>
+                            #{{ $index + 1 }}
 
-                <a href="{{ route(
-                    'transactions.edit',
-                    $trx['id']
-                ) }}"
-                class="btn btn-warning btn-sm">
+                        </span>
 
-                    Edit
+                    </td>
 
-                </a>
+                    <td>
 
-                <form
-                    action="{{ route(
-                        'transactions.destroy',
-                        $trx['id']
-                    ) }}"
-                    method="POST"
-                    class="d-inline">
+                        {{ $trx['barang'] }}
 
-                    @csrf
-                    @method('DELETE')
+                    </td>
 
-                    <button
-                        class="btn btn-danger btn-sm"
-                        onclick="return confirm(
-                            'Hapus transaksi?'
-                        )">
+                    <td>
 
-                        Hapus
+                        @if($trx['jenis'] == 'masuk')
 
-                    </button>
+                            <span class="badge-masuk">
 
-                </form>
+                                <i class="bi bi-arrow-down-circle me-1"></i>
 
-            </td>
+                                MASUK
 
-        </tr>
+                            </span>
 
-    @empty
+                        @else
 
-        <tr>
+                            <span class="badge-keluar">
 
-            <td colspan="6"
-                class="text-center">
+                                <i class="bi bi-arrow-up-circle me-1"></i>
 
-                Belum ada transaksi
+                                KELUAR
 
-            </td>
+                            </span>
 
-        </tr>
+                        @endif
 
-    @endforelse
+                    </td>
 
-    </tbody>
+                    <td>
 
-</table>
+                        {{ number_format($trx['jumlah']) }}
+
+                    </td>
+
+                    <td>
+
+                        {{ $trx['tanggal'] }}
+
+                    </td>
+
+                    <td>
+
+                        {{ $trx['admin'] }}
+
+                    </td>
+
+                    <td>
+
+                        <div class="d-flex gap-2">
+
+                            <a href="{{ route('transactions.edit',$trx['id']) }}"
+                               class="btn-action btn-edit">
+
+                                <i class="bi bi-pencil"></i>
+
+                            </a>
+
+                            <form
+                                action="{{ route('transactions.destroy',$trx['id']) }}"
+                                method="POST">
+
+                                @csrf
+                                @method('DELETE')
+
+                                <button
+                                    type="submit"
+                                    class="btn-action btn-delete"
+                                    onclick="return confirm('Hapus transaksi?')">
+
+                                    <i class="bi bi-trash"></i>
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            @empty
+
+                <tr>
+
+                    <td colspan="7" class="text-center py-5">
+
+                        <i class="bi bi-inbox fs-1 d-block mb-3"></i>
+
+                        Belum ada transaksi
+
+                    </td>
+
+                </tr>
+
+            @endforelse
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</div>
 
 @endsection
