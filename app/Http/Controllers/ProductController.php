@@ -174,7 +174,21 @@ class ProductController extends Controller
             );
     }
 
+    public function stokMenipis()
+    {
+        $barangMenipis = Product::with('category')
+            ->whereColumn(
+                'stok_total',
+                '<=',
+                'stok_minimum'
+            )
+            ->get();
 
+        return view(
+            'products.stok-menipis',
+            compact('barangMenipis')
+        );
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -197,14 +211,6 @@ class ProductController extends Controller
             'Barang berhasil ditambahkan'
         );
 }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.

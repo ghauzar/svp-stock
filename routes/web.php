@@ -10,7 +10,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::get('/login', [AuthController::class,'showLogin'])
@@ -81,7 +81,12 @@ Route::middleware('check.login')
         [ProductController::class, 'downloadTemplate']
     )->name('products.template');
 
-
+    // Stok menipis
+    Route::get(
+        '/stok-menipis',
+        [ProductController::class, 'stokMenipis']
+    )->name('products.stokMenipis');
+    
     Route::resource(
         'products',
         ProductController::class

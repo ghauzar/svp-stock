@@ -338,6 +338,20 @@
 
             </li>
 
+            <li>
+
+                <a
+                    href="{{ route('products.stokMenipis') }}"
+                    class="sidebar-link {{ request()->routeIs('products.stokMenipis') ? 'active' : '' }}">
+
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+
+                    <span>Stok Menipis</span>
+
+                </a>
+                
+            </li>
+
             <li class="mt-5">
 
                 <form
